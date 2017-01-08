@@ -106,13 +106,7 @@ namespace Treehouse.FitnessFrog.Controllers
                 return RedirectToAction("Index");
             }
 
-
-            //TODO Use the repository to update
             SetupActivitiesSelectListItems();
-            //TODO Redirect to the entries list page
-
-
-            //TODO poulate the activies sleect list items viewbag
 
             return View(entry);
         }
@@ -125,7 +119,21 @@ namespace Treehouse.FitnessFrog.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            return View();
+            Entry entry = _entriesRepository.GetEntry((int)id);
+            if (entry == null)
+            {
+                return HttpNotFound();
+            }
+
+            return View(entry);
+        }
+
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            _entriesRepository.DeleteEntry(id);
+
+            return RedirectToAction("Index");
         }
 
         private void ValidateEntry(Entry entry)
